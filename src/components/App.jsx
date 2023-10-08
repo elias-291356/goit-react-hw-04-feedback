@@ -1,64 +1,51 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import FeedbackOptions from './Feedbacks/Feedbacks';
 import Statistics from './Statisticks/Statisticks';
 import Section from './Section/Section';
 import 'bulma/css/bulma.css';
-export class App extends Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
+export const App = () => {
+  const [feedback, setFeedback] = useState({ good: 0, neutral: 0, bad: 0 });
+
+  const handleLeaveFeedback = (type) => {
+    setFeedback((prevFeedback) => ({ ...prevFeedback, [type]: prevFeedback[type] + 1 }));
   };
 
-  handleLeaveFeedback = (type) => {
-    this.setState((prevState) => ({ [type]: prevState[type] + 1 }));
+  const handleResetFeedback = () => {
+    setFeedback({ good: 0, neutral: 0, bad: 0 });
   };
 
-  handleResetFeedback = () => {
-    this.setState({
-      good: 0,
-      neutral: 0,
-      bad: 0,
-    });
-  };
-
-  onClickResetForm = (event) => {
+  const onClickResetForm = (event) => {
     const { name } = event.target;
     if (name !== "good" && name !== "neutral" && name !== "bad") {
-      this.setState({
-        good: 0,
-        neutral: 0,
-        bad: 0
-      });
+      setFeedback({ good: 0, neutral: 0, bad: 0 });
     }
   }
 
-  render() {
-    const { good, neutral, bad } = this.state;
 
-    return (
-      <div className='container content'
+  const { good, neutral, bad } = feedback;
 
-      >
-        <Section title="Please leave feedback">
-          <FeedbackOptions
-            onLeaveFeedback={this.handleLeaveFeedback}
-            onResetFeedback={this.handleResetFeedback}
-          />
-        </Section>
-        <Section >
+  return (
+    <div className='container content' >
 
-          <Statistics
-            good={good}
-            neutral={neutral}
-            bad={bad}
-            onClick={this.onClickResetForm}
-          />
-        </Section>
-      </div>
-    );
-  }
+      <Section title="Please leave feedback">
+        <FeedbackOptions
+          onLeaveFeedback={handleLeaveFeedback}
+          onResetFeedback={handleResetFeedback}
+        />
+      </Section>
+      <Section >
+
+        <Statistics
+          good={good}
+          neutral={neutral}
+          bad={bad}
+          onClick={onClickResetForm}
+        />
+      </Section>
+    </div>
+  );
 }
+
 
 
 
